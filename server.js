@@ -8,7 +8,8 @@ const routes = require('./api/routes.js');
 
 const app = express();
 const port = process.env.PORT_API || 1337;
-const frontendURL = process.env.FRONTEND_URL || 'http://localhost:3000';
+const frontendURL = process.env.FRONTEND_URL;
+const frontendLocalURL = process.env.FRONTEND_LOCAL_URL;
 
 // Middleware
 app.use(express.json());
@@ -17,7 +18,7 @@ app.use(bodyParser.json({ limit: '100mb' }));
 
 // CORS
 const corsOptions = {
-    origin: frontendURL,
+    origin: [frontendLocalURL, frontendURL],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
