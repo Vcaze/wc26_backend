@@ -1,4 +1,4 @@
-const database = require("../db/mongodb/src/database.js");
+const database = require("../db/mongodb/database.js");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 // const { errorToJSON } = require("next/dist/server/render.js");

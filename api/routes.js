@@ -28,11 +28,11 @@ router.get('/test2', async (req, res) => {
 });
 
 router.post('/user', async (req, res) => {
+    // console.log("Trying to register user with data: ", req.body);
     const userData = {
-        email: req.body.email,
         password: req.body.password,
+        email: req.body.email,
         firstName: req.body.firstName,
-        lastName: req.body.lastName,
         role: "user",
         score: 0
     };

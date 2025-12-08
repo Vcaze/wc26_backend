@@ -6,13 +6,26 @@
 require('dotenv').config();
 const mongo = require("mongodb").MongoClient;
 const { MongoClient, ObjectId } = require("mongodb"); 
-let dsn = `mongodb+srv://${process.env.ATLAS_USERNAME}:${process.env.ATLAS_PASSWORD}@cluster0.twauw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+let dsn = `mongodb+srv://${process.env.ATLAS_USERNAME}:${process.env.ATLAS_PASSWORD}@wc26.v0ttzgp.mongodb.net/?appName=wc26`;
 // console.log("dsn: " + dsn)
 // const dsn =  process.env.DBWEBB_DSN || "mongodb://localhost:27017/texteditor";
 
 const fs = require("fs");
 const path = require("path");
 const { error, log } = require("console");
+
+const client = new MongoClient(dsn);
+
+// Test connection
+async function run() {
+  try {
+    await client.connect();
+    console.log("Connected to MongoDB Atlas!");
+  } finally {
+    await client.close();
+  }
+}
+run().catch(console.error);
 
 const database = {
     /**
