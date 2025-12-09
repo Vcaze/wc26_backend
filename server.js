@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '100mb' }));
 app.use(bodyParser.json({ limit: '100mb' }));
 
 // CORS
-// console.log('Allowed Frontend URLs:', frontendLocalURL, frontendURL, frontendLocalURL2);
+console.log('Allowed Frontend URLs:', frontendLocalURL, frontendURL, frontendLocalURL2);
 const corsOptions = {
     origin: [frontendLocalURL, frontendURL, frontendLocalURL2],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
