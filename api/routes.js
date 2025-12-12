@@ -83,47 +83,6 @@ router.delete('/user/:id', auth.verifyJwt, async (req, res) => {
     }
 });
 
-router.get('/cities', auth.verifyJwt, async (req, res) => {
-    try {
-        const result = await database.getAll("cities");
-        // console.log("result: ", result);
-        res.json(result);
-    } catch (error) {
-        console.error('Error fetching cities:', error);
-        res.status(500).json({ message: 'Internal server error', error: error.message });
-    }
-});
-
-router.get('/city/:id', auth.verifyJwt, async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        const result = await database.getOne("cities", id);
-        // console.log("result: ", result);
-        res.json(result);
-    } catch (error) {
-        console.error('Error fetching city:', error);
-        res.status(500).json({ message: 'Internal server error', error: error.message });
-    }
-});
-
-router.post('/city', auth.verifyJwt, async (req, res) => {
-    const cityData = {
-        name: req.body.name,
-        area: req.body.area,
-        parkingStations: req.body.parkingStations,
-        chargingStations: req.body.chargingStations
-    };
-
-    try {
-        const result = await database.addOne("cities", cityData);
-        // console.log("result: ", result);
-        res.json(result);
-    } catch (error) {
-        console.error('Error adding city:', error);
-        res.status(500).json({ message: 'Internal server error', error: error.message });
-    }
-});
 
 router.get('/users', auth.verifyJwt, async (req, res) => {
     try {
@@ -185,153 +144,6 @@ router.put('/user/password/:id', auth.verifyJwt, async (req, res) => {
             success: false,
             message: 'Internal server error', error: error.message
         });
-    }
-});
-
-router.post('/bike', auth.verifyJwt, async (req, res) => {
-    // console.log(req.body)
-    const bikeData = {
-        city: req.body.city,
-        position: req.body.position,
-        location: req.body.location,
-        charging: req.body.location === "chargingStation",
-        available: true,
-        operational: true,
-        batteryPercentage: 100
-    };
-
-    try {
-        const result = await database.addOne("bikes", bikeData);
-        // console.log("result: ", result);
-        res.status(201).json(result);
-    } catch (error) {
-        console.error('Error adding new bike to database:', error);
-        res.status(500).json({ message: 'Internal server error', error: error.message });
-    }
-});
-
-router.put('/bike/:id', auth.verifyJwt, async (req, res) => {
-    const { id } = req.params;
-
-    const updatedBikeData = {
-        ...{ id: id },
-        ...req.body
-    };
-
-    try {
-        const result = await database.updateOne("bikes", updatedBikeData);
-        // console.log("result: ", result);
-        res.status(200).json(result);
-    } catch (error) {
-        console.error('Error updating bike data:', error);
-        res.status(500).json({ message: 'Internal server error', error: error.message });
-    }
-});
-
-router.get('/bikes/:city', auth.verifyJwt, async (req, res) => {
-    const { city } = req.params;
-
-    const cityFilter = {
-        city: city
-    };
-
-    try {
-        const result = await database.filterAll("bikes", cityFilter);
-        // console.log("result: ", result);
-        res.status(200).json(result);
-    } catch (error) {
-        console.error('Error retrieving bikes:', error);
-        res.status(500).json({ message: 'Internal server error', error: error.message });
-    }
-});
-
-router.get('/bike/:id', auth.verifyJwt, async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        const result = await database.getOne("bikes", id);
-        // console.log("result: ", result);
-        res.status(200).json(result);
-    } catch (error) {
-        console.error('Error retrieving one bike:', error);
-        res.status(500).json({ message: 'Internal server error', error: error.message });
-    }
-});
-
-router.get('/bikes', auth.verifyJwt, async (req, res) => {
-    try {
-        const result = await database.getAll("bikes");
-        // console.log("result: ", result);
-        res.status(200).json(result);
-    } catch (error) {
-        console.error('Error retrieving all bikes:', error);
-        res.status(500).json({ message: 'Internal server error', error: error.message });
-    }
-});
-
-router.delete('/bike/:id', auth.verifyJwt, async (req, res) => {
-    const { id } = req.params;
-    try {
-        const result = await database.deleteOne("bikes", id);
-        // console.log("result: ", result);
-        res.status(200).json(result);
-    } catch (error) {
-        console.error('Error deleting bike:', error);
-        res.status(500).json({ message: 'Internal server error', error: error.message });
-    }
-});
-
-router.get('/rides', auth.verifyJwt, async (req, res) => {
-    try {
-        const result = await database.getAll("rides");
-        // console.log("result: ", result);
-        res.status(200).json(result);
-    } catch (error) {
-        console.error('Error retrieving all rides', error);
-        res.status(500).json({ message: 'Internal server error', error: error.message });
-    }
-});
-
-router.get('/user/rides/:id', auth.verifyJwt, async (req, res) => {
-    const { id } = req.params;
-
-    const ridesFilter = { userId: id };
-
-    try {
-        const result = await database.filterAll("rides", ridesFilter);
-        // console.log("result: ", result);
-        res.status(200).json(result);
-    } catch (error) {
-        console.error('Error filtering rides on user id:', error);
-        res.status(500).json({ message: 'Internal server error', error: error.message });
-    }
-});
-
-router.get('/bike/rides/:id', auth.verifyJwt, async (req, res) => {
-    const { id } = req.params;
-
-    const ridesFilter = { bikeId: id };
-
-    try {
-        const result = await database.filterAll("rides", ridesFilter);
-        // console.log("result: ", result);
-        res.status(200).json(result);
-    } catch (error) {
-        console.error('Error filtering rides on user id:', error);
-        res.status(500).json({ message: 'Internal server error', error: error.message });
-    }
-});
-
-router.delete('/ride/:id', auth.verifyJwt, async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        const result = await database.deleteOne("rides", id);
-        // console.log("result: ", result);
-        res.status(200).json(result);
-    } catch (error) {
-        console.error('Error deleting ride:', error);
-        res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 });
 
@@ -397,6 +209,64 @@ router.post('/bulk-delete/:collection', auth.verifyJwt, async (req, res) => {
         res.status(200).json({message: 'Bulk deletes successful', result: deleteResults});
     } catch (error) {
         console.error('Error performing bulk deletes:', error);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+});
+
+// Get all teams
+router.get('/teams', auth.verifyJwt, async (req, res) => {
+    try {
+        const result = await database.getAll("teams");
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error retrieving teams:', error);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+});
+
+// Save user predictions
+router.post('/predictions', auth.verifyJwt, async (req, res) => {
+    const email = req.user.email; // from JWT  
+    const predictions = req.body.predictions; // 12 groups with 4 positions each
+
+    const doc = {
+        email: email,
+        predictions: predictions,
+    };
+
+    try {
+        // Remove any old predictions, then save new
+        await database.deleteMany("predictions", { email: email });
+        const result = await database.addOne("predictions", doc);
+
+        res.status(201).json(result);
+    } catch (error) {
+        console.error('Error saving predictions:', error);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+});
+
+// Get predictions for a specific user
+router.get('/predictions/:email', auth.verifyJwt, async (req, res) => {
+    const { email } = req.params;
+
+    try {
+        const filter = { email: email };
+        const result = await database.filterAll("predictions", filter);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error retrieving user predictions:', error);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+});
+
+// Get all predictions
+router.get('/predictions', auth.verifyJwt, async (req, res) => {
+    try {
+        const result = await database.getAll("predictions");
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error retrieving all predictions:', error);
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 });

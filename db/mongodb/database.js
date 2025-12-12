@@ -53,6 +53,30 @@ const database = {
         // As it allready gets converted to sting in the index.ejs.
     },
 
+    /**
+     * Insert many documents into a collection
+     *
+     * @async
+     *
+     * @param {string} colName   Name of collection.
+     * @param {Array} documents  Array of objects to insert.
+     *
+     * @throws Error when database operation fails.
+     *
+     * @return {object} Return info about the operation.
+     */
+    addMany: async function addMany(colName, documents) {
+        const client = await mongo.connect(dsn);
+        const db = await client.db();
+        const col = await db.collection(colName);
+
+        const result = await col.insertMany(documents);
+
+        await client.close();
+
+        return result;
+    },
+
 
     /**
      * Get evrything from a collection
@@ -122,6 +146,54 @@ const database = {
             _id: new ObjectId(String(id))
         };
         const result = await col.deleteOne(data);
+
+        await client.close();
+
+        return result;
+    },
+
+    /**
+     * Remove many documents from a collection by filter
+     *
+     * @async
+     *
+     * @param {string} colName  Name of collection.
+     * @param {object} filter   MongoDB filter object.
+     *
+     * @throws Error when database operation fails.
+     *
+     * @return {object} Return info about the operation.
+     */
+    deleteMany: async function deleteMany(colName, filter = {}) {
+        const client = await mongo.connect(dsn);
+        const db = await client.db();
+        const col = await db.collection(colName);
+
+        const result = await col.deleteMany(filter);
+
+        await client.close();
+
+        return result;
+    },
+
+    /**
+     * Remove all documents from a collection
+     *
+     * @async
+     *
+     * @param {string} colName  Name of collection to clear.
+     *
+     * @throws Error when database operation fails.
+     *
+     * @return {object} Return info about the operation.
+     */
+    deleteCollection: async function deleteCollection(colName) {
+        const client = await mongo.connect(dsn);
+        const db = await client.db();
+        const col = await db.collection(colName);
+
+        // delete all docs
+        const result = await col.deleteMany({});
 
         await client.close();
 
