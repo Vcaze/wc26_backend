@@ -3,7 +3,6 @@ const database = require("../db/mongodb/database.js");
 const auth = require('../auth/auth.js');
 const express = require('express');
 const { MongoClient, ObjectId } = require("mongodb");
-const { playercards } = require("../db/mongodb/data/playercards.js");
 const router = express.Router();
 
 // Så här kan en fetch se ut med token. Fungerar på samma sätt med POST, PUT och DELETE routes
@@ -30,7 +29,9 @@ router.get('/test2', async (req, res) => {
 
 router.get('/playercards', auth.verifyJwt, async (req, res) => {
     try {
-        res.status(200).json(playercards);
+        // Return empty array since playercards.js was removed
+        // Frontend now uses seed-players.ts as the data source
+        res.status(200).json([]);
     } catch (error) {
         console.error('Error fetching player cards:', error);
         res.status(500).json({ message: 'Internal server error', error: error.message });
@@ -46,7 +47,9 @@ router.post('/user', async (req, res) => {
         role: "user",
         score: 0,
         packsRemaining: 5,
-        collectedCards: []
+        collectedCards: [],
+        hasCompletedTenaball: false,
+        hasCompletedPredictions: false
     };
 
     try {

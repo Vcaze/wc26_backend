@@ -37,7 +37,7 @@ console.log('Allowed Frontend URLs:', allowedOrigins);
 
 const corsOptions = {
     origin: function (origin, callback) {
-        console.log("Checking origin:", origin);
+        // console.log("Checking origin:", origin);
 
         // allow requests without origin (browser direct / curl)
         if (!origin) return callback(null, true);
